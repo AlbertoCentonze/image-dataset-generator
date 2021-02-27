@@ -1,0 +1,6 @@
+{
+  "name": "example_set",
+  "resDirectory": "./images/",
+  "size": { "height": 32, "width": 32 },
+  "layers": ["baloon", "face"]
+}
