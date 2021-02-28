@@ -44,9 +44,10 @@ class ImageSet:
     def __create_element_id(self) -> str:
         id = ""
         for layer in self.layers:
-            id += str(random.randrange(0, layer.size, 1))
+            id += str(random.randrange(0, layer.size, 1)) + "-"
+        id = id[:-1]
         while id in self.set_elements:
-            id = self.__create_element_id()
+            return self.__create_element_id()
         self.set_elements.append(id)
         return id
 
@@ -73,7 +74,7 @@ class ImageSet:
 
     def generate_image(self, id) -> None:
         result = Image.new(mode="RGBA", size=(32, 32))
-        for layer_index, image_index in enumerate(id):
+        for layer_index, image_index in enumerate(id.split("-")):
             image_index = int(image_index)
             image = self.layers[layer_index].images[image_index]
             result.paste(image, (0, 0), image)
@@ -81,4 +82,4 @@ class ImageSet:
         result.save(self.output_path + id + ".png")
 
 
-ImageSet("set-config.json").generate_set(9)
+ImageSet("set-config.json").generate_set(10)
