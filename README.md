@@ -1,4 +1,4 @@
-# pixelart-dataset-generator
+# Image dataset generator
 A simple python scripts that allows you to create procedurally a greate amount of images by overlaying layers 
 
 ## How to install
@@ -29,4 +29,5 @@ From the Python shell write
 ```python
 ImageSet("yourjson.json").generate_image(image_id)
 ```
+(more instruction on how to chose the right id coming soon)
  

@@ -35,21 +35,41 @@ class ImageSet:
         self.resource_path = config["resDirectory"]
         layers_informations = config["layers"]
         self.layers = []
+        self.set_elements = []
         for l in layers_informations:
             self.layers.append(self.Layer(l, self))
-        #TODO amount estimate
+        self.max_size = self.__compute_max_set_size()
+        print(f"With the current set you can generate up to {self.max_size} elements")
 
     def __create_element_id(self) -> str:
         id = ""
         for layer in self.layers:
             id += str(random.randrange(0, layer.size, 1))
+        while id in self.set_elements:
+            id = self.__create_element_id()
+        self.set_elements.append(id)
         return id
-        #TODO fix double
+
+    def __check_output_size(self, correct_size, message):
+        output_list = glob.glob(self.output_path + "*.png")
+        if (len(output_list) != correct_size):
+            raise Exception(message)
+
+    def __compute_max_set_size(self):
+        size = 1
+        for layer in self.layers:
+            size *= layer.size
+        return size
     
-    def generate_set(self, n: int):
-        for x in range(n):
+    def generate_set(self, set_size: int):
+        if set_size > self.max_size:
+            raise Exception(f"Invalid set size, the maximum value with the current set is {self.max_size}")
+        self.__check_output_size(0, "Don't forget to delete the output folder before generating a new set")
+        self.set_elements = []
+        for x in range(set_size):
             id = self.__create_element_id()
             self.generate_image(id)
+        self.__check_output_size(set_size, "An error has occured, please contact the developer")
 
     def generate_image(self, id) -> None:
         result = Image.new(mode="RGBA", size=(32, 32))
@@ -61,4 +81,4 @@ class ImageSet:
         result.save(self.output_path + id + ".png")
 
 
-ImageSet("set-config.json").generate_set(1000)
+ImageSet("set-config.json").generate_set(9)
